@@ -77,6 +77,15 @@ export default class Node extends PureComponent {
         onNodeDrop: PropTypes.func
     };
 
+    constructor(props) {
+        super(props);
+        this.dragAndDropContext = {
+            onDrag: this.handleNodeDrag,
+            onDrop: this.handleNodeDrop,
+            accepts: this.accepts
+        };
+    }
+
     componentDidMount() {
         // Always request scroll on first render if given node is focused
         if (this.props.isFocused) {
@@ -202,14 +211,6 @@ export default class Node extends PureComponent {
         return errorNodeContextPaths ? errorNodeContextPaths.includes($get('contextPath', node)) : false;
     }
 
-    getDragAndDropContext() {
-        return {
-            onDrag: this.handleNodeDrag,
-            onDrop: this.handleNodeDrop,
-            accepts: this.accepts
-        };
-    }
-
     render() {
         const {
             ChildRenderer,
@@ -262,7 +263,7 @@ export default class Node extends PureComponent {
                     level={level}
                     onToggle={this.handleNodeToggle}
                     onClick={this.handleNodeClick}
-                    dragAndDropContext={this.getDragAndDropContext()}
+                    dragAndDropContext={this.dragAndDropContext}
                     dragForbidden={$get('isAutoCreated', node)}
                     />
                 {this.isCollapsed() ? null : (

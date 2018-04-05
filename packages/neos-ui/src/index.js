@@ -133,9 +133,13 @@ function * application() {
     const frontendConfigurationRegistry = globalRegistry.get('frontendConfiguration');
 
     Object.keys(frontendConfiguration).forEach(key => {
-        frontendConfigurationRegistry.set(key, {
-            ...frontendConfiguration[key]
-        });
+        if (typeof frontendConfiguration[key] === 'object') {
+            frontendConfigurationRegistry.set(key, {
+                ...frontendConfiguration[key]
+            });
+        } else {
+            frontendConfigurationRegistry.set(key, frontendConfiguration[key]);
+        }
     });
 
     //
