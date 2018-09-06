@@ -9,7 +9,8 @@ class SelectBox_Option_SingleLine extends PureComponent {
         option: PropTypes.shape({
             label: PropTypes.string.isRequired,
             icon: PropTypes.string,
-            disabled: PropTypes.bool
+            disabled: PropTypes.bool,
+            secondary: PropTypes.bool
         }).isRequired,
 
         disabled: PropTypes.bool,
@@ -18,16 +19,17 @@ class SelectBox_Option_SingleLine extends PureComponent {
     }
 
     render() {
-        const {option, className, disabled} = this.props;
+        const {option, className, disabled, secondary} = this.props;
 
         const isDisabled = disabled || option.disabled;
+        const isSecondary = secondary || option.secondary;
 
         const finalClassNames = mergeClassNames({
             [className]: className
         });
 
         return (
-            <ListPreviewElement {...this.props} icon={option.icon} disabled={isDisabled} className={finalClassNames}>
+            <ListPreviewElement {...this.props} icon={option.icon} disabled={isDisabled} secondary={isSecondary} className={finalClassNames}>
                 <span>{option.label}</span>
             </ListPreviewElement>
         );

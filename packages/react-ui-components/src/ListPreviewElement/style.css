@@ -16,6 +16,9 @@
     color: var(--colors-ContrastBright);
     cursor: not-allowed;
 }
+.listPreviewElement--isSecondary {
+    color: var(--colors-ContrastBright);
+}
 .listPreviewElement--isHighlighted {
     background: var(--colors-PrimaryBlue);
 }

@@ -94,6 +94,9 @@ Neos:
 
         defaultInlineEditor: 'ckeditor'
 
+        dimensionSwitcher:
+          allowSecondaryDimensions: true
+
       #################################
       # INTERNAL CONFIG (no API)
       #################################

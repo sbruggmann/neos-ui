@@ -12,6 +12,7 @@ import {Map} from 'immutable';
 import {selectors, actions} from '@neos-project/neos-ui-redux-store';
 import I18n from '@neos-project/neos-ui-i18n';
 import sortBy from 'lodash.sortby';
+import neos from "@neos-project/neos-ui-decorators/src/neos";
 
 // TODO Add title prop to Icon component
 const SelectedPreset = props => {
@@ -31,14 +32,15 @@ SelectedPreset.propTypes = {
 };
 
 const DimensionSelector = props => {
-    const {icon, dimensionLabel, presets, dimensionName, activePreset, onSelect, isLoading} = props;
+    const {icon, dimensionLabel, presets, dimensionName, activePreset, onSelect, isLoading, allowSecondary} = props;
 
     const presetOptions = $map(
         (presetConfiguration, presetName) => {
             return $transform({
                 label: $get('label'),
                 value: presetName,
-                disabled: $get('disabled')
+                disabled: allowSecondary ? false : $get('disabled'),
+                secondary: allowSecondary ? $get('disabled') : false
             }, presetConfiguration);
         },
         [],
@@ -84,13 +86,17 @@ DimensionSelector.propTypes = {
     selectPreset: actions.CR.ContentDimensions.selectPreset,
     setAllowed: actions.CR.ContentDimensions.setAllowed
 })
+@neos(globalRegistry => ({
+    allowSecondaryDimensions: $get('allowSecondaryDimensions', globalRegistry.get('frontendConfiguration').get('dimensionSwitcher'))
+}))
 export default class DimensionSwitcher extends PureComponent {
     static propTypes = {
         contentDimensions: PropTypes.object.isRequired,
         activePresets: PropTypes.object.isRequired,
         allowedPresets: PropTypes.object.isRequired,
         selectPreset: PropTypes.func.isRequired,
-        setAllowed: PropTypes.func.isRequired
+        setAllowed: PropTypes.func.isRequired,
+        allowSecondaryDimensions: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -160,7 +166,7 @@ export default class DimensionSwitcher extends PureComponent {
     }
 
     render() {
-        const {contentDimensions, activePresets} = this.props;
+        const {contentDimensions, activePresets, allowSecondaryDimensions} = this.props;
         const contentDimensionsObject = contentDimensions.toObject();
         const contentDimensionsObjectKeys = Object.keys(contentDimensionsObject);
 
@@ -188,7 +194,7 @@ export default class DimensionSwitcher extends PureComponent {
                     })}
                 </DropDown.Header>
                 <DropDown.Contents>
-                    {contentDimensionsObjectKeys.map(dimensionName => {
+                    {contentDimensionsObjectKeys.map((dimensionName, dimensionIndex) => {
                         const dimensionConfiguration = contentDimensionsObject[dimensionName];
                         const icon = $get('icon', dimensionConfiguration) && $get('icon', dimensionConfiguration);
                         // First look for active preset in transient state, else take it from activePresets prop
@@ -202,6 +208,7 @@ export default class DimensionSwitcher extends PureComponent {
                             presets={this.presetsForDimension(dimensionName)}
                             activePreset={activePreset}
                             onSelect={this.handleSelectPreset}
+                            allowSecondary={allowSecondaryDimensions}
                             />
                         );
                     })}

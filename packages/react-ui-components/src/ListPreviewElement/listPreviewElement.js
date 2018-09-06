@@ -30,6 +30,7 @@ class ListPreviewElement extends PureComponent {
         icon: PropTypes.string,
         className: PropTypes.string,
         disabled: PropTypes.bool,
+        secondary: PropTypes.bool,
         children: PropTypes.node.isRequired,
 
         // ------------------------------
@@ -46,6 +47,7 @@ class ListPreviewElement extends PureComponent {
             'listPreviewElement': PropTypes.string.isRequired,
             'listPreviewElement--isHighlighted': PropTypes.string.isRequired,
             'listPreviewElement--isDisabled': PropTypes.string.isRequired,
+            'listPreviewElement--isSecondary': PropTypes.string.isRequired,
             'listPreviewElement__icon': PropTypes.string.isRequired
         }).isRequired, /* eslint-enable quote-props */
         Icon: PropTypes.any.isRequired
@@ -56,6 +58,7 @@ class ListPreviewElement extends PureComponent {
             icon,
             className,
             disabled,
+            secondary,
             children,
 
             onClick,
@@ -70,6 +73,7 @@ class ListPreviewElement extends PureComponent {
             [theme.listPreviewElement]: true,
             [theme['listPreviewElement--isHighlighted']]: isHighlighted,
             [theme['listPreviewElement--isDisabled']]: disabled,
+            [theme['listPreviewElement--isSecondary']]: secondary,
             [className]: className
         });
 
