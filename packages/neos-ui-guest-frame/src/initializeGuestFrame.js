@@ -138,16 +138,21 @@ export default ({globalRegistry, store}) => function * initializeGuestFrame() {
     const focusedNode = yield select(selectors.CR.Nodes.focusedNodePathSelector);
     const focusedNodeElement = findNodeInGuestFrame(focusedNode);
     if (focusedNodeElement) {
-        focusedNodeElement.classList.add(style['markActiveNodeAsFocused--focusedNode']);
+        if (focusedNodeElement.classList.contains('neos-contentcollection')) {
+            focusedNodeElement.classList.add(style['markActiveContentCollectionNodeAsFocused--focusedNode']);
+        } else {
+            focusedNodeElement.classList.add(style['markActiveNodeAsFocused--focusedNode']);
+        }
         // Request to scroll focused node into view
         yield put(actions.UI.ContentCanvas.requestScrollIntoView(true));
     }
 
     yield takeEvery(actionTypes.CR.Nodes.FOCUS, function * (action) {
-        const oldNode = findInGuestFrame(`.${style['markActiveNodeAsFocused--focusedNode']}`);
+        const oldNode = findInGuestFrame(`.${style['markActiveNodeAsFocused--focusedNode']},.${style['markActiveContentCollectionNodeAsFocused--focusedNode']}`);
 
         if (oldNode) {
             oldNode.classList.remove(style['markActiveNodeAsFocused--focusedNode']);
+            oldNode.classList.remove(style['markActiveContentCollectionNodeAsFocused--focusedNode']);
         }
 
         const {contextPath, fusionPath} = action.payload;
@@ -156,7 +161,11 @@ export default ({globalRegistry, store}) => function * initializeGuestFrame() {
             const nodeElement = findNodeInGuestFrame(contextPath, fusionPath);
 
             if (nodeElement) {
-                nodeElement.classList.add(style['markActiveNodeAsFocused--focusedNode']);
+                if (nodeElement.classList.contains('neos-contentcollection')) {
+                    nodeElement.classList.add(style['markActiveContentCollectionNodeAsFocused--focusedNode']);
+                } else {
+                    nodeElement.classList.add(style['markActiveNodeAsFocused--focusedNode']);
+                }
 
                 const getNodeByContextPathSelector = selectors.CR.Nodes.makeGetNodeByContextPathSelector(contextPath);
                 const node = yield select(getNodeByContextPathSelector);
@@ -172,7 +181,11 @@ export default ({globalRegistry, store}) => function * initializeGuestFrame() {
         const node = findInGuestFrame(`.${style['markActiveNodeAsFocused--focusedNode']}`);
 
         if (node) {
-            node.classList.remove(style['markActiveNodeAsFocused--focusedNode']);
+            if (node.classList.contains('neos-contentcollection')) {
+                node.classList.remove(style['markActiveContentCollectionNodeAsFocused--focusedNode']);
+            } else {
+                node.classList.remove(style['markActiveNodeAsFocused--focusedNode']);
+            }
         }
     });
 };

@@ -34,18 +34,27 @@ export default ({store, globalRegistry, nodeTypesRegistry, inlineEditorRegistry,
     }
 
     contentDomNode.addEventListener('mouseenter', e => {
-        const oldNode = getGuestFrameDocument().querySelector(`.${style.markHoveredNodeAsHovered}`);
+        const oldNode = getGuestFrameDocument().querySelector(`.${style.markHoveredNodeAsHovered},.${style.markHoveredContentCollectionNodeAsHovered}`);
         if (oldNode) {
             oldNode.classList.remove(style.markHoveredNodeAsHovered);
+            oldNode.classList.remove(style.markHoveredContentCollectionNodeAsHovered);
         }
 
-        contentDomNode.classList.add(style.markHoveredNodeAsHovered);
+        if (contentDomNode.classList.contains('neos-contentcollection')) {
+            contentDomNode.classList.add(style.markHoveredContentCollectionNodeAsHovered);
+        } else {
+            contentDomNode.classList.add(style.markHoveredNodeAsHovered);
+        }
 
         e.stopPropagation();
     });
 
     contentDomNode.addEventListener('mouseleave', e => {
-        contentDomNode.classList.remove(style.markHoveredNodeAsHovered);
+        if (contentDomNode.classList.contains('neos-contentcollection')) {
+            contentDomNode.classList.remove(style.markHoveredContentCollectionNodeAsHovered);
+        } else {
+            contentDomNode.classList.remove(style.markHoveredNodeAsHovered);
+        }
 
         e.stopPropagation();
     });

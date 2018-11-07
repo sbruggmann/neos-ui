@@ -2,6 +2,22 @@
     outline-offset: .5em;
     outline: 2px solid rgba(#000, .2);
 }
+.markHoveredContentCollectionNodeAsHovered {
+    outline-offset: .7em;
+    outline: 2px solid rgba(#000, .2);
+}
+:global(.neos-contentcollection::before) {
+    content: '';
+    position: absolute;
+    top: -0.10rem;
+    right: 0;
+    left: 0;
+    bottom: -0.10rem;
+}
+:global(.neos-contentcollection .neos-contentcollection::before) {
+    top: -0.8rem;
+    bottom: -0.8rem;
+}
 .markHiddenNodeAsHidden {
     opacity: .5;
 }
@@ -14,6 +30,10 @@
 
 .markActiveNodeAsFocused--focusedNode {
     outline-offset: .5em;
+    outline: 2px solid var(--colors-PrimaryBlue);
+}
+.markActiveContentCollectionNodeAsFocused--focusedNode {
+    outline-offset: .7em;
     outline: 2px solid var(--colors-PrimaryBlue);
 }
 
